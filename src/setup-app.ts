@@ -1,4 +1,4 @@
-import express, { Express } from 'express';
+import express, { Express, Request, Response, NextFunction } from 'express';
 import { videosRouter } from './videos/routers/videos.router';
 import { testingRouter } from './testing/routers/testing.router';
 
@@ -11,6 +11,14 @@ export const setupApp = (app: Express) => {
 
   app.use('/videos', videosRouter);
   app.use('/testing', testingRouter);
+
+  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+    if (err.type === 'entity.parse.failed') {
+      return res.status(400).send({ message: 'Invalid JSON' });
+    }
+
+    res.status(err.status || 500).send({ message: err.message });
+  });
 
   return app;
 };

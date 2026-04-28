@@ -124,6 +124,15 @@ const validatePublicationDate = (date: string): FieldError | null => {
     };
   }
 
+  const isoDateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
+
+  if (typeof date !== 'string' || !isoDateRegex.test(date)) {
+    return {
+      message: `${VIDEO_KEYS.publicationDate} must be an ISO date string`,
+      field: VIDEO_KEYS.publicationDate,
+    };
+  }
+
   return null;
 };
 
